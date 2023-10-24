@@ -7,7 +7,7 @@ import time
 user_agents_df = pd.read_csv("user_agents_list.csv")
 #This is the Fake user agent data set
 
-keyword = input()
+keyword = input("Enter your keyword: ")
 keyword = keyword.replace(" ", "+")
 sutra_url = "https://sutrastores.com/en/search?type=product&options%5Bunavailable_products%5D=hide&options%5Bprefix%5D=last&q={}".format(keyword)
 
@@ -27,7 +27,7 @@ def response(url):
            "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
            "DNT":"1","Connection":"close",
            "Upgrade-Insecure-Requests":"1",
-          "Accept-Language": "en-US,en;q=0.9"}
+           "Accept-Language": "en-US,en;q=0.9"}
     
     response = requests.get(url, headers = headers) # the request is made here
     content = response.content
@@ -36,7 +36,7 @@ def response(url):
     
     return soup
 
-soup = response(sutra_url) #Now i have the soup
+main_soup = response(sutra_url) #The main soup is the soup of page one
 
 
 
@@ -59,7 +59,12 @@ def sutra(soup):
     
     for index in unc_prices:
         old_price = index.contents[0].text
-        old_price = float(old_price.split(" ")[1]) #This will reomve the LE from the price
+        try:
+        	old_price = float(old_price.split(" ")[1]) #This will reomve the LE from the price
+        except:
+        	old_price = (old_price.split(" ")[1])#some times there are values with commas. like 1,000
+        	old_price = float(old_price.replace(",", ""))
+        	
         old_prices_list.append(old_price)
         
         try:
@@ -78,12 +83,15 @@ def sutra(soup):
 
 
 # now i will make this function works for all of the pages
-main_soup = response(sutra_url) #The main soup is the soup of page one
-number_of_pages = int(main_soup.find_all("a", class_ = "t4s-pagination__item link")[-1].contents[0])
+try:
+	number_of_pages = int(main_soup.find_all("a", class_ = "t4s-pagination__item link")[-1].contents[0])
+except:
+	number_of_pages = 2 #This will make the loop preformed once
 
 for index in range(2, number_of_pages + 1):
     #This loop will repeate the response and sutra function for all pages
     
+
     next_page_url = sutra_url + "&page={}".format(index) #This will create the link
     
     soup = response(next_page_url) #creates the soup
@@ -102,6 +110,4 @@ sutra_dict = {"product_name" : titles_list,
 
 sutra_df = pd.DataFrame(sutra_dict)
 
-print(sutra_df.head())
-
-sutra_df.to_csv("sutra.csv")
+sutra_df.to_csv("sutra.csv", index = False)
