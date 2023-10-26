@@ -11,8 +11,6 @@ def main_sutra(keyword):
 
     user_agents_df = pd.read_csv('user_agents_list.csv')
     #This is the Fake user agent data set
-    print("user_agent passed")
-
     sutra_url = "https://sutrastores.com/en/search?type=product&options%5Bunavailable_products%5D=hide&options%5Bprefix%5D=last&q={}".format(keyword)
 
     titles_list = []
@@ -24,25 +22,23 @@ def main_sutra(keyword):
     def response(url):
         #This function creates the request and it takes the url as input and returns the soup
         
-        user_agent = random.choice(user_agents_df["user_agent"]) #Fake user agent
-        
+        #user_agent = random.choice(user_agents_df["user_agent"]) #Fake user agent
+        '''
         headers = {"User-Agent": user_agent,
                "Accept-Encoding":"gzip, deflate",
                "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                "DNT":"1","Connection":"close",
                "Upgrade-Insecure-Requests":"1",
                "Accept-Language": "en-US,en;q=0.9"}
-        
-        response = requests.get(url, headers = headers) # the request is made here
-        content = response.content
+        '''
+        page = requests.get(url) # the request is made here
+        content = page.content
         
         soup = BeautifulSoup(content, "html.parser")
         
         return soup
 
-    print("after the first function")    
     main_soup = response(sutra_url) #The main soup is the soup of page one
-    print("called the first function and now we have the soup")
 
 
     def sutra(soup):
@@ -84,27 +80,29 @@ def main_sutra(keyword):
             discount_list.append(discount)
             
             sources_list.append("sutra") #This will help us later when we merge datasets, to know wich market this came from
+     
 
-    print("finished defining function and now for the loop")        
+
+
 
     # now i will make this function works for all of the pages
     try:
-    	number_of_pages = int(main_soup.find_all("a", class_ = "t4s-pagination__item link")[-1].contents[0])
+        number_of_pages = int(main_soup.find_all("a", class_ = "t4s-pagination__item link")[-1].contents[0])
+       
+        for index in range(2, number_of_pages + 1):
+            #This loop will repeate the response and sutra function for all pages
+            next_page_url = sutra_url + "&page={}".format(index) #This will create the link
+           
+            soup = response(next_page_url) #creates the soup
+           
+            sutra(soup) #To exctract the values
+            print("Page: {}".format(index))
+
     except:
-    	number_of_pages = 2 #This will make the loop preformed once
+       print("number of pages is one")
+       sutra(main_soup) 
 
-    for index in range(2, number_of_pages + 1):
-        #This loop will repeate the response and sutra function for all pages
-        
 
-        next_page_url = sutra_url + "&page={}".format(index) #This will create the link
-        
-        soup = response(next_page_url) #creates the soup
-        
-        sutra(soup) #To exctract the values
-        
-        
-        print("Page: {}".format(index))
         
     # This code will create the final data frame
     sutra_dict = {"product_name" : titles_list,

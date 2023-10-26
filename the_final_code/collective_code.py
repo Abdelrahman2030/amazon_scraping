@@ -21,7 +21,7 @@ sutra_df = sutra_function.main_sutra(keyword)
 #seconde thinf sutra_df
 
 
-
+'''
 import jumia_function
 
 jumia_df = jumia_function.jumia_main(keyword)
@@ -30,3 +30,4 @@ end_time = time.time()
 
 time_taken = (end_time - start_time) / 60
 print("the total time taken of the collective code is {} minutes".format(time_taken))
+'''
