@@ -4,6 +4,7 @@ def main_sutra(keyword):
 
 
     import pandas as pd
+    import numpy as np
     import requests
     from bs4 import BeautifulSoup
     import random
@@ -18,6 +19,13 @@ def main_sutra(keyword):
     new_prices_list = []
     discount_list = []
     sources_list = []
+    searc_rank_list = []
+
+    #The following list will be null just to merge this data set with jumia, as jumia set has the columns
+    rating_list = []
+    numer_of_ratings = []
+    official_store_list =[]
+    brand_name = []
 
     def response(url):
         #This function creates the request and it takes the url as input and returns the soup
@@ -47,13 +55,22 @@ def main_sutra(keyword):
         from sutra
         '''
 
+
         #The next section is for the titles
         unc_titles_list = soup.find_all("h3", class_ = "t4s-product-title")
-        
+        search_rank = 1
         for index in unc_titles_list:
             titles_list.append(index.text)
+
+            searc_rank_list.append(search_rank)
+            search_rank = search_rank + 1
             # This for loop exctracts the product names
-        
+
+            #The next appends are to add null values to merge with jumia
+            rating_list.append(np.nan)
+            numer_of_ratings.append(np.nan)
+            official_store_list.append("official_store")
+            brand_name.append("sutra")
         
         #The next section is for prices
         unc_prices = soup.find_all("div", class_ = "t4s-product-price")
@@ -105,10 +122,15 @@ def main_sutra(keyword):
 
         
     # This code will create the final data frame
-    sutra_dict = {"product_name" : titles_list,
+    sutra_dict = {"search_rank" : searc_rank_list,
+                "product_name" : titles_list,
                  "old_price" : old_prices_list,
-                 "new_price" : new_prices_list,
                  "discount" : discount_list,
+                 "new_price" : new_prices_list,
+                 "rating" : rating_list,
+                 "number_of_ratings" : numer_of_ratings,
+                 "official_store" : official_store_list,
+                 "brand_name" : brand_name,
                  "source" : sources_list}
 
     sutra_df = pd.DataFrame(sutra_dict)

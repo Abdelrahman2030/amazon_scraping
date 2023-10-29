@@ -20,6 +20,7 @@ def jumia_main(keyword):
     official_store_list = []
     brand_list = []
     made_in_egypt_list = []
+    source_list = []
 
 
     '''
@@ -45,6 +46,9 @@ def jumia_main(keyword):
         for div in div_list:
             # this for loop extracts the names, prices, etc
             product_name = div.find("h3", class_ = "name").contents[0] # the name of the product
+            
+            source_list.append("Jumia") #This list for telling that the website this product
+            #came from is jumia
 
             if len(div.find_all(text = "Official Store")) != 0:
                 '''
@@ -52,7 +56,7 @@ def jumia_main(keyword):
                 if it's a brand it will identify the brand becouse it's the first word in 
                 the broduct name, and if the brand is american it will add eagle to it
                 '''
-                official_store_list.append("Official Store")
+                official_store_list.append("official_store")
                 brand_name = product_name.split()[0].lower()
                 brand_list.append(brand_name)
             else:
@@ -134,16 +138,17 @@ def jumia_main(keyword):
              "product_name": names_list,
              "old_price": old_prices_list,
              "discount": discount_list, 
-             "current_price": new_prices_list,
+             "new_price": new_prices_list,
              "rating": rating_list,
              "number_of_ratings" : number_of_ratings_list,
              "official_store" : official_store_list,
-             "brand_name" : brand_list}
+             "brand_name" : brand_list,
+             "source" : source_list}
     jumia_df = pd.DataFrame(dict_)
     jumia_df.to_csv("{}_jumia_data_set.csv".format(keyword), index = False)
 
 
-    print("total of {} produts".format(len(df)))
+    print("total of {} produts".format(len(jumia_df)))
 
 
     return jumia_df
