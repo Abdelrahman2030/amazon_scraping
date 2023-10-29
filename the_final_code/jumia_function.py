@@ -117,7 +117,7 @@ def jumia_main(keyword):
     url = "https://www.jumia.com.eg/catalog/?q={}".format(keyword)
 
     products_in_page(url) # This runs the function for the first page
-    print("the total number of pages is 50")
+    print("the total number of pages in jumia is 50")
     print("first page done")
 
     for index in range(2, 51):

@@ -60,8 +60,9 @@ def main_sutra(keyword):
         unc_titles_list = soup.find_all("h3", class_ = "t4s-product-title")
         search_rank = 1
         for index in unc_titles_list:
-            titles_list.append(index.text)
 
+            titles_list.append(index.text)
+        
             searc_rank_list.append(search_rank)
             search_rank = search_rank + 1
             # This for loop exctracts the product names
@@ -105,7 +106,7 @@ def main_sutra(keyword):
     # now i will make this function works for all of the pages
     try:
         number_of_pages = int(main_soup.find_all("a", class_ = "t4s-pagination__item link")[-1].contents[0])
-       
+        print("the total number of pages in sutra is {}".format(number_of_pages))
         for index in range(2, number_of_pages + 1):
             #This loop will repeate the response and sutra function for all pages
             next_page_url = sutra_url + "&page={}".format(index) #This will create the link
@@ -136,5 +137,5 @@ def main_sutra(keyword):
     sutra_df = pd.DataFrame(sutra_dict)
 
     sutra_df.to_csv("sutra_{}.csv".format(keyword), index = False)
-
+    print("The total number of products in sutra is {}".format(len(searc_rank_list)))
     return sutra_df

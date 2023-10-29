@@ -13,7 +13,6 @@ start_time = time.time()
 
 keyword = input("Enter your keyword: ") #The search key words
 keyword = keyword.replace(" ", "+")
-print(keyword)
 
 sutra_df = sutra_function.main_sutra(keyword)
 #Now we have connected with sutra code, and have two things, first csv file
@@ -22,6 +21,12 @@ sutra_df = sutra_function.main_sutra(keyword)
 
 
 jumia_df = jumia_function.jumia_main(keyword)
+
+#Now we have the two data sets we will merge them
+
+merged_df = pd.concat([jumia_df, sutra_df])
+
+merged_df.to_csv("merged.csv")
 
 end_time = time.time()
 
