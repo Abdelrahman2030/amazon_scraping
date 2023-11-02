@@ -90,7 +90,7 @@ def jumia_main(keyword):
                 rating = div.find("div", class_ = "stars _s").contents[0]
                 rating = float(rating.split()[0])
             except:
-                rating = np.nan
+                rating = 0
 
 
             try:
