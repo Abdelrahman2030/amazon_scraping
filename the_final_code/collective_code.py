@@ -26,7 +26,7 @@ jumia_df = jumia_function.jumia_main(keyword)
 
 merged_df = pd.concat([jumia_df, sutra_df])
 
-merged_df.to_csv("merged.csv", index = False)
+merged_df.to_csv("{}_merged.csv".format(keyword), index = False)
 
 end_time = time.time()
 
