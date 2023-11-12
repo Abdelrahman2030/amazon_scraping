@@ -136,6 +136,7 @@ def main_sutra(keyword):
 
     sutra_df = pd.DataFrame(sutra_dict)
 
-    sutra_df.to_csv("sutra_{}.csv".format(keyword), index = False)
+    #sutra_df.to_csv("sutra_{}.csv".format(keyword), index = False)
+    
     print("The total number of products in sutra is {}".format(len(searc_rank_list)))
     return sutra_df

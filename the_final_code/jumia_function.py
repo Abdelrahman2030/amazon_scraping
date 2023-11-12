@@ -145,7 +145,7 @@ def jumia_main(keyword):
              "brand_name" : brand_list,
              "source" : source_list}
     jumia_df = pd.DataFrame(dict_)
-    jumia_df.to_csv("{}_jumia_data_set.csv".format(keyword), index = False)
+    #jumia_df.to_csv("{}_jumia_data_set.csv".format(keyword), index = False)
 
 
     print("total of {} produts".format(len(jumia_df)))
